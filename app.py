@@ -116,9 +116,48 @@ def tela_login():
 
 
 def tela_pagamento(usuario):
+    from services.pagamento import criar_pagamento, verificar_pagamento_usuario
+
     st.title("💳 Ative seu acesso")
     st.warning("Seu plano ainda não está ativo.")
     st.write("Para usar o Radar Concursos Brasil, ative seu plano.")
+
+    st.markdown("### Plano Mensal")
+    st.write("✅ Busca nacional de concursos")
+    st.write("✅ Filtros por banca, estado e cargo")
+    st.write("✅ Alertas por e-mail")
+    st.write("✅ Acesso completo ao sistema")
+    st.write("💰 Valor: R$ 19,90")
+
+    if st.button("💳 Pagar agora"):
+        try:
+            link_pagamento = criar_pagamento(usuario[2])
+            st.success("Link de pagamento criado.")
+            st.markdown(f"[🔗 Clique aqui para pagar]({link_pagamento})")
+        except Exception as erro:
+            st.error("Erro ao criar pagamento.")
+            st.code(str(erro))
+
+    st.markdown("---")
+
+    if st.button("✅ Já paguei, verificar pagamento"):
+        try:
+            aprovado = verificar_pagamento_usuario(usuario[2])
+
+            if aprovado:
+                st.success("Pagamento aprovado! Seu acesso foi liberado.")
+                st.session_state.clear()
+                st.info("Faça login novamente para entrar no painel.")
+            else:
+                st.warning("Pagamento ainda não aprovado. Aguarde alguns segundos e tente novamente.")
+
+        except Exception as erro:
+            st.error("Erro ao verificar pagamento.")
+            st.code(str(erro))
+
+    if st.button("Sair"):
+        st.session_state.clear()
+        st.rerun()
 
     st.markdown("### Plano Mensal")
     st.write("✅ Busca nacional de concursos")

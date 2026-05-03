@@ -1,7 +1,9 @@
 import mercadopago
+import streamlit as st
 from database import registrar_pagamento, ativar_plano
 
-ACCESS_TOKEN = "TEST-8912645578248744-050201-bd5db7405963e24101a943ea94a9118c-165208380"
+
+ACCESS_TOKEN = st.secrets["MP_ACCESS_TOKEN"]
 
 
 def criar_pagamento(email_usuario):
@@ -21,9 +23,9 @@ def criar_pagamento(email_usuario):
         },
         "external_reference": email_usuario,
         "back_urls": {
-            "success": "https://www.google.com",
-            "failure": "https://www.google.com",
-            "pending": "https://www.google.com"
+            "success": "https://radar-concursos-brasil-zhsq9856dbdk6juvuzggvc.streamlit.app",
+            "failure": "https://radar-concursos-brasil-zhsq9856dbdk6juvuzggvc.streamlit.app",
+            "pending": "https://radar-concursos-brasil-zhsq9856dbdk6juvuzggvc.streamlit.app",
         }
     }
 
@@ -34,14 +36,23 @@ def criar_pagamento(email_usuario):
 
     preference = response["response"]
 
-    preference_id = preference["id"]
-    link_pagamento = preference["init_point"]
+    registrar_pagamento(email_usuario, preference["id"])
 
-    registrar_pagamento(email_usuario, preference_id)
-
-    return link_pagamento
+    return preference["init_point"]
 
 
-def verificar_pagamento_manual(email_usuario):
-    ativar_plano(email_usuario)
-    return True
+def verificar_pagamento_usuario(email_usuario):
+    sdk = mercadopago.SDK(ACCESS_TOKEN)
+
+    resultado = sdk.payment().search({
+        "external_reference": email_usuario
+    })
+
+    pagamentos = resultado["response"].get("results", [])
+
+    for pagamento in pagamentos:
+        if pagamento.get("status") == "approved":
+            ativar_plano(email_usuario)
+            return True
+
+    return False

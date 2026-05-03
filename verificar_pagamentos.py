@@ -1,35 +1,32 @@
 import sqlite3
 import mercadopago
+import streamlit as st
 
-ACCESS_TOKEN = "SEU_ACCESS_TOKEN"
+ACCESS_TOKEN = st.secrets["MP_ACCESS_TOKEN"]
 
 sdk = mercadopago.SDK(ACCESS_TOKEN)
 
 conn = sqlite3.connect("usuarios.db")
 cursor = conn.cursor()
 
-cursor.execute("SELECT email FROM pagamentos WHERE status = 'pendente'")
+cursor.execute("SELECT email, preference_id FROM pagamentos WHERE status = 'pendente'")
 pagamentos = cursor.fetchall()
 
-for pagamento in pagamentos:
-    email = pagamento[0]
+for email, preference_id in pagamentos:
+    resultado = sdk.payment().search({
+        "external_reference": email
+    })
 
-    # Aqui depois vamos consultar pagamento real
-    # Por enquanto libera direto para teste
+    pagamentos_mp = resultado["response"]["results"]
 
-    cursor.execute("""
-        UPDATE usuarios
-        SET plano_ativo = 1
-        WHERE email = ?
-    """, (email,))
+    for p in pagamentos_mp:
+        if p["status"] == "approved":
+            print(f"Pagamento aprovado para {email}")
 
-    cursor.execute("""
-        UPDATE pagamentos
-        SET status = 'aprovado'
-        WHERE email = ?
-    """, (email,))
+            cursor.execute("UPDATE usuarios SET plano_ativo = 1 WHERE email = ?", (email,))
+            cursor.execute("UPDATE pagamentos SET status = 'aprovado' WHERE email = ?", (email,))
 
 conn.commit()
 conn.close()
 
-print("✔️ Verificação concluída")
+print("Verificação finalizada")
