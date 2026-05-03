@@ -1,0 +1,18 @@
+BANCAS = {
+    "VUNESP": "https://www.vunesp.com.br/busca/concurso/inscricoes%20abertas",
+    "IBAM": "https://www.ibamsp-concursos.org.br/",
+    "Avança SP": "https://avancasp.selecao.net.br/index/abertos/",
+    "Instituto Mais": "https://www.institutomais.org.br/Concursos",
+    "RBO": "https://www.rboconcursos.com.br/",
+    "Consulplan": "https://www.institutoconsulplan.org.br/Concursos.aspx",
+    "FGV": "https://conhecimento.fgv.br/concursos",
+    "FCC": "https://www.concursosfcc.com.br/",
+    "Cebraspe": "https://www.cebraspe.org.br/concursos/",
+    "AOCP": "https://www.institutoaocp.org.br/concursos/",
+    "IBFC": "https://www.ibfc.org.br/concursos/abertos",
+    "Quadrix": "https://www.quadrix.org.br/todos-os-concursos/inscricoes-abertas.aspx",
+    "Fundatec": "https://www.fundatec.org.br/portal/concursos/",
+    "Legalle": "https://legalleconcursos.com.br/editais",
+    "Objetiva": "https://www.objetivas.com.br/concursos/abertos",
+    "Selecon": "https://selecon.org.br/concursos/",
+}
