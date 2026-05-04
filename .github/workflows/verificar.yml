@@ -8,7 +8,9 @@ on:
 jobs:
   rodar:
     runs-on: ubuntu-latest
-
+    
+    env:
+     MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
