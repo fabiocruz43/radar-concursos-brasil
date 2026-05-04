@@ -1,6 +1,6 @@
 import os
 import mercadopago
-
+from database import registrar_pagamento, ativar_plano
 try:
     import streamlit as st
     ACCESS_TOKEN = st.secrets.get("MP_ACCESS_TOKEN", None)
