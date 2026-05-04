@@ -1,9 +1,17 @@
+import os
 import mercadopago
 
-from database import registrar_pagamento, ativar_plano
+try:
+    import streamlit as st
+    ACCESS_TOKEN = st.secrets.get("MP_ACCESS_TOKEN", None)
+except Exception:
+    ACCESS_TOKEN = None
 
-import os
-ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
+if not ACCESS_TOKEN:
+    ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
+
+if not ACCESS_TOKEN:
+    raise ValueError("MP_ACCESS_TOKEN não encontrado.")
 
 
 def criar_pagamento(email_usuario):
