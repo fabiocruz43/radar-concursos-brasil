@@ -1,9 +1,9 @@
 import mercadopago
-import streamlit as st
+
 from database import registrar_pagamento, ativar_plano
 
-
-ACCESS_TOKEN = st.secrets["MP_ACCESS_TOKEN"]
+import os
+ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 
 
 def criar_pagamento(email_usuario):
